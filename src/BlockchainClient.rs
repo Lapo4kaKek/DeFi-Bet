@@ -37,8 +37,10 @@ impl BlockchainClient {
     pub fn get_estimationfee(&self) {
 
     }
-    pub fn get_balance(&self) {
-
+    pub fn get_balance(&self) -> web3::Result<web3::types::U256>{
+        let mut accounts = web3.eth().accounts().await?;
+        let balance = web3.eth().balance(account, None).await?;
+        balance
     }
     pub async fn send_transaction(&self, from: web3::types::Address, to: web3::types::Address,
                                   value: web3::types::U256, data: Bytes, private_key: &str, function_name: String)
@@ -57,10 +59,10 @@ impl BlockchainClient {
         };
         // sign transaction
         let signature =
-            self.web3.accounts().sign_transaction(transaction, &private_key.parse().unwrap()).await?;
+            self.web3.accounts().sign_transaction(transaction, private_key.parse().unwrap()).await?;
 
         // send transaction
-        let result = self.web3.eth().send_raw_transaction(signature.raw_transaction).await;
+        let result = self.web3.eth().send_raw_transaction(signature.raw_transaction).await?;
 
         println!("Tx succeeded with hash: {}", result);
 
