@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 starknet = "0.6.0"
+web3.0 = "0.15.0"
